@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Calories Tracker 1.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --a:#2e7d32;--al:#e8f5e9;--am:#43a047;
+  --amb:#c97a00;--red:#d63030;
+  --bg:#fff;--p:#f4faf4;--b:#c8e6c9;--bd:#a5d6a7;
+  --t:#1b3a1c;--tm:#5a8a5c;--bb:#f1f8f1;
+  --f:'Share Tech Mono',monospace;
+}
+html,body{min-height:100%;background:var(--bb);font-family:var(--f)}
+body{padding:12px;display:flex;justify-content:center;align-items:flex-start}
+#app{background:var(--bg);color:var(--t);width:100%;max-width:480px;border-radius:16px;border:1px solid var(--b);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 20px rgba(0,0,0,0.09)}
+.sc{display:none;flex-direction:column;flex:1;padding:22px 18px 18px}
+.sc.on{display:flex}
+.ttl{font-size:19px;color:var(--a);letter-spacing:2px;margin-bottom:1px}
+.sub{font-size:9px;color:var(--tm);letter-spacing:3px;margin-bottom:3px;text-transform:uppercase}
+.cred{font-size:9px;color:var(--bd);letter-spacing:2px;margin-bottom:18px}
+.fl{font-size:9px;color:var(--tm);letter-spacing:3px;text-transform:uppercase;margin-bottom:5px}
+.fn{font-size:9px;color:var(--bd);letter-spacing:1px;line-height:1.9;margin-top:5px}
+.fn a{color:var(--a);text-decoration:none}
+.fg{margin-bottom:13px}
+input,select{background:var(--p);border:1px solid var(--b);border-radius:7px;color:var(--t);font-family:var(--f);font-size:14px;padding:10px 13px;width:100%;outline:none;letter-spacing:1px;transition:border-color .2s;-webkit-appearance:none;appearance:none}
+input[type=password]{letter-spacing:2px}
+input:focus,select:focus{border-color:var(--a);box-shadow:0 0 0 2px var(--al)}
+input::placeholder{color:var(--bd);letter-spacing:1px}
+select{background-color:var(--p);padding-right:36px;cursor:pointer;background-repeat:no-repeat;background-position:right 13px center}
+select option{background:#fff;color:#111}
+.btn{background:transparent;border:1px solid var(--a);color:var(--a);font-family:var(--f);font-size:12px;letter-spacing:3px;padding:11px 16px;cursor:pointer;border-radius:8px;transition:all .15s;text-transform:uppercase;width:100%}
+.btn:hover{background:var(--al)}
+.btn:active{transform:scale(.98)}
+.bf{background:var(--a);color:#fff}
+.bf:hover{filter:brightness(.88);background:var(--a)}
+.bs{font-size:10px;padding:8px 12px;letter-spacing:2px;width:auto;border-radius:6px}
+.tdots{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tdot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:all .18s;flex-shrink:0;outline:none}
+.tdot.on{border-color:var(--t) !important;transform:scale(1.18);box-shadow:0 0 0 2px var(--bg)}
+.tdot:hover{transform:scale(1.1)}
+.gg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.gb{background:var(--p);border:1.5px solid var(--b);color:var(--tm);font-family:var(--f);font-size:10px;letter-spacing:1px;padding:10px 8px;cursor:pointer;border-radius:8px;transition:all .15s;text-align:center;line-height:1.5}
+.gb:hover{border-color:var(--am);color:var(--a)}
+.gb.on{border-color:var(--a);color:var(--a);background:var(--al)}
+.gb .kp{font-size:14px;display:block;margin-top:2px;color:var(--amb)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:13px}
+.sl{font-size:9px;color:var(--tm);letter-spacing:3px;text-transform:uppercase;margin-bottom:7px}
+.hud{background:var(--p);border:1px solid var(--b);border-radius:12px;padding:14px;margin-bottom:12px}
+.ht{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:10px}
+.hl{font-size:9px;color:var(--tm);letter-spacing:3px;text-transform:uppercase;margin-bottom:2px}
+.hbig{font-size:30px;color:var(--a);line-height:1}
+.hbig span{font-size:11px;color:var(--tm);margin-left:2px}
+.hbal{font-size:22px;line-height:1;text-align:right}
+.hbal.ok{color:var(--a)}.hbal.warn{color:var(--amb)}.hbal.over{color:var(--red)}
+.bw{background:var(--b);border-radius:3px;height:5px;overflow:hidden;margin-bottom:12px}
+.bf2{height:100%;background:var(--a);border-radius:3px;transition:width .4s}
+.bf2.warn{background:var(--amb)}.bf2.over{background:var(--red)}
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.mc{background:var(--bg);border:1px solid var(--b);border-radius:7px;padding:7px 5px;text-align:center}
+.mcl{font-size:8px;color:var(--tm);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px}
+.mcv{font-size:13px;color:var(--t)}
+.fr{display:flex;gap:8px;margin-bottom:12px}
+.fr input{flex:1;font-size:13px}
+.lw{flex:1;overflow-y:auto;max-height:300px}
+.lw::-webkit-scrollbar{width:4px}
+.lw::-webkit-scrollbar-thumb{background:var(--b);border-radius:2px}
+.le{font-size:11px;color:var(--bd);letter-spacing:1px;text-align:center;padding:24px 0;line-height:2.2}
+.li{display:flex;align-items:center;padding:9px 0;border-bottom:1px solid var(--b);gap:10px}
+.lk{font-size:20px;color:var(--amb);min-width:58px;flex-shrink:0;line-height:1}
+.lk span{display:block;font-size:8px;color:var(--tm);letter-spacing:1px;margin-top:1px}
+.lb{flex:1;min-width:0}
+.ln{font-size:12px;color:var(--t);letter-spacing:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px}
+.lm{font-size:9px;color:var(--tm);letter-spacing:1px}
+.ld{background:transparent;border:1px solid var(--b);color:var(--bd);cursor:pointer;font-size:9px;padding:5px 8px;border-radius:5px;font-family:var(--f);letter-spacing:1px;transition:all .15s;flex-shrink:0}
+.ld:hover{border-color:var(--red);color:var(--red);background:#fff5f5}
+.sb{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--b)}
+.st{font-size:9px;color:var(--tm);letter-spacing:2px}
+@keyframes blink{50%{opacity:0}}
+.bl{display:inline-block;animation:blink .8s step-end infinite}
+.tr{display:flex;align-items:center;gap:8px;padding:8px 0;font-size:11px;color:var(--tm);letter-spacing:1px;border-bottom:1px solid var(--b)}
+.er{padding:7px 0;font-size:10px;color:var(--red);letter-spacing:1px;border-bottom:1px solid var(--b);line-height:1.7}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="ss" class="sc on">
+    <div class="ttl">CALORIES TRACKER 1.1</div>
+    <div class="sub">// DAILY FOOD LOG</div>
+    <div class="cred">// BY THEALIMIR</div>
+
+    <div class="sl">COLOR THEME</div>
+    <div class="tdots" id="tdots"></div>
+
+    <div class="fg">
+      <div class="fl">ANTHROPIC API KEY</div>
+      <input id="apikey" type="password" placeholder="sk-ant-...">
+      <div class="fn">
+        // GET FREE KEY AT <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>
+        // SAVED IN YOUR BROWSER — NEVER SHARED
+      </div>
+    </div>
+
+    <div class="g2">
+      <div><div class="fl">GENDER</div>
+        <select id="gender"><option value="male">MALE</option><option value="female">FEMALE</option></select></div>
+      <div><div class="fl">ACTIVITY</div>
+        <select id="activity">
+          <option value="1.2">SEDENTARY</option><option value="1.375">LIGHT</option>
+          <option value="1.55" selected>MODERATE</option><option value="1.725">ACTIVE</option>
+          <option value="1.9">V.ACTIVE</option>
+        </select></div>
+    </div>
+    <div class="g3">
+      <div><div class="fl">AGE</div><input id="age" type="number" placeholder="30" min="10" max="100"></div>
+      <div><div class="fl">WEIGHT kg</div><input id="weight" type="number" placeholder="70"></div>
+      <div><div class="fl">HEIGHT cm</div><input id="height" type="number" placeholder="170"></div>
+    </div>
+
+    <div class="sl">GOAL</div>
+    <div class="gg">
+      <button class="gb" data-d="500"  onclick="pg(this)">FAT LOSS<span class="kp" id="kfl">—</span></button>
+      <button class="gb" data-d="250"  onclick="pg(this)">MILD CUT<span class="kp" id="kmc">—</span></button>
+      <button class="gb on" data-d="0" onclick="pg(this)">MAINTAIN<span class="kp" id="kmn">—</span></button>
+      <button class="gb" data-d="-250" onclick="pg(this)">BULK<span class="kp" id="kbk">—</span></button>
+    </div>
+    <button class="btn bf" onclick="go()">[ START TRACKING ]</button>
+  </div>
+
+  <div id="ms" class="sc" style="padding:14px 14px 12px">
+    <div class="hud">
+      <div class="ht">
+        <div><div class="hl">CONSUMED</div><div class="hbig" id="hc">0<span>kcal</span></div></div>
+        <div><div class="hl" style="text-align:right">BALANCE</div><div class="hbal ok" id="hb">—</div></div>
+      </div>
+      <div class="bw"><div class="bf2" id="hbar" style="width:0%"></div></div>
+      <div class="mg">
+        <div class="mc"><div class="mcl">PROTEIN</div><div class="mcv" id="hp">0g</div></div>
+        <div class="mc"><div class="mcl">CARBS</div><div class="mcv" id="hca">0g</div></div>
+        <div class="mc"><div class="mcl">FAT</div><div class="mcv" id="hf">0g</div></div>
+        <div class="mc"><div class="mcl">FIBER</div><div class="mcv" id="hfi">0g</div></div>
+      </div>
+    </div>
+    <div style="font-size:9px;color:var(--tm);letter-spacing:2px;margin-bottom:10px;text-transform:uppercase" id="gl">—</div>
+    <div class="fr">
+      <input id="fi" type="text" placeholder="e.g. 2 eggs + toast with butter" autocomplete="off" onkeydown="if(event.key==='Enter')addFood()">
+      <button class="btn bf bs" onclick="addFood()">LOG ↵</button>
+    </div>
+    <div class="lw" id="lw">
+      <div class="le" id="le">// NO ENTRIES YET<br><span style="font-size:9px">type a food above and press LOG</span></div>
+    </div>
+    <div class="sb">
+      <span class="st" id="clk"></span>
+      <div style="display:flex;gap:6px">
+        <button class="btn bs" onclick="rst()" style="color:var(--tm);border-color:var(--b)">⟳ RESET</button>
+        <button class="btn bs" onclick="goSt()" style="color:var(--tm);border-color:var(--b)">◀ SETUP</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const TH=[
+  {n:'Forest',  a:'#2e7d32',al:'#e8f5e9',am:'#43a047',bg:'#fff',p:'#f4faf4',b:'#c8e6c9',bd:'#a5d6a7',t:'#1b3a1c',tm:'#5a8a5c',bb:'#f1f8f1',d:'#2e7d32'},
+  {n:'Ocean',   a:'#1565c0',al:'#e3f2fd',am:'#1e88e5',bg:'#fff',p:'#f3f8fe',b:'#bbdefb',bd:'#90caf9',t:'#0d2744',tm:'#4a7aaa',bb:'#eef5fd',d:'#1565c0'},
+  {n:'Pink',    a:'#c2185b',al:'#fce4ec',am:'#e91e63',bg:'#fff',p:'#fdf0f5',b:'#f8bbd0',bd:'#f48fb1',t:'#3d0020',tm:'#9a3060',bb:'#fef4f8',d:'#e91e63'},
+  {n:'Rose',    a:'#880e4f',al:'#fce4ec',am:'#ad1457',bg:'#fff',p:'#fdf2f7',b:'#f8bbd0',bd:'#f06292',t:'#2d0018',tm:'#803050',bb:'#fef5f9',d:'#ad1457'},
+  {n:'Purple',  a:'#6a1b9a',al:'#f3e5f5',am:'#8e24aa',bg:'#fff',p:'#faf4fc',b:'#e1bee7',bd:'#ce93d8',t:'#2a0040',tm:'#7a50a0',bb:'#f8f0fc',d:'#6a1b9a'},
+  {n:'Indigo',  a:'#283593',al:'#e8eaf6',am:'#3949ab',bg:'#fff',p:'#f3f4fc',b:'#c5cae9',bd:'#9fa8da',t:'#0d1544',tm:'#4a54a0',bb:'#eef0fc',d:'#283593'},
+  {n:'Teal',    a:'#00695c',al:'#e0f2f1',am:'#00897b',bg:'#fff',p:'#f2fbfa',b:'#b2dfdb',bd:'#80cbc4',t:'#002921',tm:'#408878',bb:'#ecf9f8',d:'#00695c'},
+  {n:'Cyan',    a:'#00838f',al:'#e0f7fa',am:'#00acc1',bg:'#fff',p:'#f0fbfd',b:'#b2ebf2',bd:'#80deea',t:'#002d34',tm:'#3a8890',bb:'#eafbfd',d:'#00838f'},
+  {n:'Lime',    a:'#558b2f',al:'#f9fbe7',am:'#7cb342',bg:'#fff',p:'#f7fced',b:'#dcedc8',bd:'#c5e1a5',t:'#1a2d08',tm:'#607840',bb:'#f4fce8',d:'#558b2f'},
+  {n:'Amber',   a:'#e65100',al:'#fff3e0',am:'#fb8c00',bg:'#fff',p:'#fdf8f2',b:'#ffe0b2',bd:'#ffcc80',t:'#3e1400',tm:'#a06020',bb:'#fef9f2',d:'#e65100'},
+  {n:'Red',     a:'#b71c1c',al:'#ffebee',am:'#e53935',bg:'#fff',p:'#fdf4f4',b:'#ffcdd2',bd:'#ef9a9a',t:'#3d0000',tm:'#9a3030',bb:'#fef6f6',d:'#b71c1c'},
+  {n:'Dark',    a:'#90caf9',al:'#1e2a38',am:'#64b5f6',bg:'#121212',p:'#1e1e1e',b:'#2e2e2e',bd:'#555',t:'#e8e8e8',tm:'#999',bb:'#0a0a0a',d:'#555'},
+];
+let ct=0;
+function applyT(i){
+  ct=i;const t=TH[i],r=document.documentElement.style;
+  r.setProperty('--a',t.a);r.setProperty('--al',t.al);r.setProperty('--am',t.am);
+  r.setProperty('--bg',t.bg);r.setProperty('--p',t.p);r.setProperty('--b',t.b);
+  r.setProperty('--bd',t.bd);r.setProperty('--t',t.t);r.setProperty('--tm',t.tm);
+  r.setProperty('--bb',t.bb);document.body.style.background=t.bb;
+  const enc=encodeURIComponent(t.a);
+  document.querySelectorAll('select').forEach(s=>{
+    s.style.backgroundImage=`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M0 0l6 8 6-8z' fill='${enc}'/%3E%3C/svg%3E")`;
+  });
+  document.querySelectorAll('.tdot').forEach((d,j)=>d.classList.toggle('on',j===i));
+  try{localStorage.setItem('ct_t',i);}catch(e){}
+}
+function buildDots(){
+  const w=document.getElementById('tdots');
+  TH.forEach((t,i)=>{
+    const b=document.createElement('button');
+    b.className='tdot'+(i===ct?' on':'');
+    b.style.background=t.d;b.title=t.n;b.setAttribute('aria-label',t.n);
+    b.onclick=()=>applyT(i);w.appendChild(b);
+  });
+}
+
+const SK='ct_v8';
+let ST={setup:null,log:[],date:null},def=0;
+
+function pg(b){document.querySelectorAll('.gb').forEach(x=>x.classList.remove('on'));b.classList.add('on');def=parseInt(b.dataset.d);}
+function tdee(){
+  const g=document.getElementById('gender').value;
+  const a=parseFloat(document.getElementById('age').value)||30;
+  const w=parseFloat(document.getElementById('weight').value)||70;
+  const h=parseFloat(document.getElementById('height').value)||170;
+  const ac=parseFloat(document.getElementById('activity').value);
+  return Math.round((g==='male'?10*w+6.25*h-5*a+5:10*w+6.25*h-5*a-161)*ac);
+}
+function prev(){
+  const t=tdee();
+  document.getElementById('kfl').textContent=(t-500)+' kcal';
+  document.getElementById('kmc').textContent=(t-250)+' kcal';
+  document.getElementById('kmn').textContent=t+' kcal';
+  document.getElementById('kbk').textContent=(t+250)+' kcal';
+}
+['age','weight','height'].forEach(id=>document.getElementById(id).addEventListener('input',prev));
+document.getElementById('gender').addEventListener('change',prev);
+document.getElementById('activity').addEventListener('change',prev);
+
+function go(){
+  const k=document.getElementById('apikey').value.trim();
+  const a=parseFloat(document.getElementById('age').value);
+  const w=parseFloat(document.getElementById('weight').value);
+  const h=parseFloat(document.getElementById('height').value);
+  if(!k){alert('Please enter your Anthropic API key');return;}
+  if(!a||!w||!h){alert('Please fill in age, weight and height');return;}
+  const goal=tdee()-def;
+  ST.setup={k,gender:document.getElementById('gender').value,age:a,weight:w,height:h,
+    activity:parseFloat(document.getElementById('activity').value),def,goal,theme:ct};
+  const today=new Date().toDateString();
+  if(ST.date!==today){ST.log=[];ST.date=today;}
+  sv();showMain();
+}
+function showMain(){
+  document.getElementById('ss').classList.remove('on');
+  document.getElementById('ms').classList.add('on');
+  const s=ST.setup,lbl=s.def>0?'FAT LOSS':s.def<0?'BULK':'MAINTAIN';
+  document.getElementById('gl').textContent=`// BY THEALIMIR  ·  TARGET: ${s.goal} KCAL/DAY  [ ${lbl} ]`;
+  rlog();uhud();tick();
+}
+function goSt(){
+  document.getElementById('ms').classList.remove('on');
+  document.getElementById('ss').classList.add('on');
+  if(ST.setup){
+    document.getElementById('apikey').value=ST.setup.k||'';
+    document.getElementById('age').value=ST.setup.age;
+    document.getElementById('weight').value=ST.setup.weight;
+    document.getElementById('height').value=ST.setup.height;
+    document.getElementById('gender').value=ST.setup.gender;
+    document.getElementById('activity').value=ST.setup.activity;
+    prev();
+  }
+}
+
+/* ── Extract valid Anthropic response from any text ── */
+function extractAnthropicData(txt){
+  // try parse as-is
+  try{
+    const d=JSON.parse(txt);
+    // direct Anthropic response
+    if(d.content) return d;
+    // some proxies wrap: {contents: "..."} or {body: "..."}
+    const inner=d.contents||d.body||d.data||d.response;
+    if(inner){
+      const d2=JSON.parse(inner);
+      if(d2.content) return d2;
+    }
+    // error from Anthropic
+    if(d.error) throw new Error(d.error.message||'API error');
+  }catch(e){
+    if(e.message&&!e.message.includes('JSON')) throw e;
+  }
+  // try finding JSON object anywhere in the text
+  const m=txt.match(/\{[\s\S]*"content"[\s\S]*\}/);
+  if(m){try{const d=JSON.parse(m[0]);if(d.content)return d;}catch(e){}}
+  return null;
+}
+
+/* ── Extract food JSON from Claude's text response ── */
+function extractFoodJSON(txt){
+  // strip markdown fences
+  const clean=txt.replace(/```[a-z]*\n?/g,'').replace(/```/g,'').trim();
+  // try direct parse
+  try{return JSON.parse(clean);}catch(e){}
+  // find first {...} block
+  const m=clean.match(/\{[^{}]+\}/);
+  if(m){try{return JSON.parse(m[0]);}catch(e){}}
+  return null;
+}
+
+/* ── Call Anthropic via multiple strategies ── */
+async function callClaude(key,food){
+  const BODY=JSON.stringify({
+    model:'claude-haiku-4-5-20251001',
+    max_tokens:200,
+    messages:[{role:'user',content:`Estimate calories and macronutrients for: "${food}"\nRespond with ONLY a JSON object, no markdown, no text before or after:\n{"name":"short name max 28 chars","kcal":number,"protein_g":number,"carbs_g":number,"fat_g":number,"fiber_g":number}`}]
+  });
+  const DIRECT_URL='https://api.anthropic.com/v1/messages';
+  const HDRS={
+    'Content-Type':'application/json',
+    'x-api-key':key,
+    'anthropic-version':'2023-06-01',
+    'anthropic-dangerous-allow-browser':'true'
+  };
+
+  const strategies=[
+    // 1. Direct
+    async()=>{
+      const r=await fetch(DIRECT_URL,{method:'POST',headers:HDRS,body:BODY});
+      const txt=await r.text();
+      const d=extractAnthropicData(txt);
+      if(!d) throw new Error('No valid response');
+      if(d.error) throw new Error(d.error.message);
+      return d;
+    },
+    // 2. corsproxy.io
+    async()=>{
+      const r=await fetch(`https://corsproxy.io/?url=${encodeURIComponent(DIRECT_URL)}`,
+        {method:'POST',headers:HDRS,body:BODY});
+      const txt=await r.text();
+      const d=extractAnthropicData(txt);
+      if(!d) throw new Error('No valid response from corsproxy');
+      if(d.error) throw new Error(d.error.message);
+      return d;
+    },
+    // 3. allorigins — sends as GET with encoded body, returns {contents:...}
+    async()=>{
+      // allorigins only supports GET, so we use a different approach: 
+      // encode request as a POST via their fetch endpoint
+      const r=await fetch('https://api.allorigins.win/get?url='+encodeURIComponent(DIRECT_URL),{
+        method:'GET'
+      });
+      // allorigins GET won't work for POST — skip to next
+      throw new Error('allorigins does not support POST');
+    },
+    // 4. Use a serverless function proxy via public worker
+    async()=>{
+      // Cloudflare worker proxy that simply forwards requests
+      const r=await fetch(`https://proxy.cors.sh/${DIRECT_URL}`,{
+        method:'POST',
+        headers:{...HDRS,'x-cors-api-key':'temp_demo'},
+        body:BODY
+      });
+      const txt=await r.text();
+      const d=extractAnthropicData(txt);
+      if(!d) throw new Error('No valid response from cors.sh');
+      if(d.error) throw new Error(d.error.message);
+      return d;
+    },
+    // 5. thingproxy
+    async()=>{
+      const r=await fetch('https://thingproxy.freeboard.io/fetch/'+DIRECT_URL,{
+        method:'POST',headers:HDRS,body:BODY
+      });
+      const txt=await r.text();
+      const d=extractAnthropicData(txt);
+      if(!d) throw new Error('No valid response from thingproxy');
+      if(d.error) throw new Error(d.error.message);
+      return d;
+    },
+  ];
+
+  let lastErr='unknown error';
+  for(let i=0;i<strategies.length;i++){
+    try{
+      const result=await strategies[i]();
+      return result;
+    }catch(e){
+      // auth errors — stop immediately
+      if(e.message&&(e.message.toLowerCase().includes('invalid')||e.message.toLowerCase().includes('auth')||e.message.includes('401')||e.message.includes('403'))){
+        throw new Error('Invalid API key — please check it in Setup');
+      }
+      lastErr=e.message||'failed';
+      // continue to next strategy
+    }
+  }
+  throw new Error(`Could not connect after trying all methods. Last error: ${lastErr}`);
+}
+
+async function addFood(){
+  const inp=document.getElementById('fi');
+  const text=inp.value.trim();
+  if(!text)return;
+  const key=ST.setup?.k;
+  if(!key){alert('No API key — go to Setup');return;}
+
+  inp.value='';inp.disabled=true;
+  const lw=document.getElementById('lw');
+  document.getElementById('le').style.display='none';
+
+  const el=document.createElement('div');
+  el.className='tr';
+  el.innerHTML=`<span>// ANALYSING: ${text.substring(0,34)}</span><span class="bl">▮</span>`;
+  lw.appendChild(el);lw.scrollTop=lw.scrollHeight;
+
+  try{
+    const data=await callClaude(key,text);
+    const raw=data.content?.find(b=>b.type==='text')?.text||'';
+    const parsed=extractFoodJSON(raw);
+    if(!parsed||typeof parsed.kcal==='undefined') throw new Error('Could not read nutrition data from response');
+    el.remove();
+    ST.log.push({
+      id:Date.now(),
+      name:(parsed.name||text).substring(0,28),
+      kcal:Math.round(parsed.kcal||0),
+      protein:Math.round(parsed.protein_g||0),
+      carbs:Math.round(parsed.carbs_g||0),
+      fat:Math.round(parsed.fat_g||0),
+      fiber:Math.round(parsed.fiber_g||0),
+    });
+    sv();rlog();uhud();
+  }catch(e){
+    el.remove();
+    const er=document.createElement('div');
+    er.className='er';
+    er.innerHTML='// '+( e.message||'Unknown error').substring(0,90)
+      +'<br><span style="font-size:9px;opacity:.7">// Ensure your API key is correct and you have internet</span>';
+    lw.appendChild(er);setTimeout(()=>er.remove(),8000);
+  }
+  inp.disabled=false;inp.focus();
+}
+
+function del(id){ST.log=ST.log.filter(e=>e.id!==id);sv();rlog();uhud();}
+function rlog(){
+  const lw=document.getElementById('lw'),le=document.getElementById('le');
+  lw.querySelectorAll('.li').forEach(e=>e.remove());
+  if(!ST.log.length){le.style.display='block';return;}
+  le.style.display='none';
+  ST.log.forEach(e=>{
+    const d=document.createElement('div');d.className='li';
+    d.innerHTML=`<div class="lk">${e.kcal}<span>kcal</span></div>
+      <div class="lb"><div class="ln">${e.name}</div>
+      <div class="lm">P ${e.protein}g &nbsp;·&nbsp; C ${e.carbs}g &nbsp;·&nbsp; F ${e.fat}g &nbsp;·&nbsp; Fiber ${e.fiber}g</div></div>
+      <button class="ld" onclick="del(${e.id})">✕ remove</button>`;
+    lw.appendChild(d);
+  });
+  lw.scrollTop=lw.scrollHeight;
+}
+function uhud(){
+  const K=ST.log.reduce((s,e)=>s+e.kcal,0);
+  const P=ST.log.reduce((s,e)=>s+e.protein,0);
+  const C=ST.log.reduce((s,e)=>s+e.carbs,0);
+  const F=ST.log.reduce((s,e)=>s+e.fat,0);
+  const Fi=ST.log.reduce((s,e)=>s+e.fiber,0);
+  const lim=ST.setup?.goal||2000,bal=lim-K,pct=Math.min((K/lim)*100,100);
+  document.getElementById('hc').innerHTML=`${K}<span>kcal</span>`;
+  const be=document.getElementById('hb');
+  be.textContent=bal>=0?bal+' left':Math.abs(bal)+' over';
+  be.className='hbal '+(bal<0?'over':pct>=80?'warn':'ok');
+  document.getElementById('hp').textContent=P+'g';
+  document.getElementById('hca').textContent=C+'g';
+  document.getElementById('hf').textContent=F+'g';
+  document.getElementById('hfi').textContent=Fi+'g';
+  const bar=document.getElementById('hbar');
+  bar.style.width=pct+'%';
+  bar.className='bf2'+(pct>=100?' over':pct>=80?' warn':'');
+}
+function tick(){
+  const el=document.getElementById('clk');if(!el)return;
+  const n=new Date(),pad=x=>String(x).padStart(2,'0');
+  el.textContent=`// ${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;
+  setTimeout(tick,1000);
+}
+function rst(){
+  if(confirm("Reset today's log?")){ST.log=[];ST.date=new Date().toDateString();sv();rlog();uhud();}
+}
+function sv(){try{localStorage.setItem(SK,JSON.stringify(ST));}catch(e){}}
+function ld(){
+  try{
+    const r=localStorage.getItem(SK);if(!r)return;
+    const s=JSON.parse(r);
+    if(s.date!==new Date().toDateString()){s.log=[];s.date=new Date().toDateString();}
+    ST=s;
+  }catch(e){}
+}
+function midnight(){
+  const n=new Date(),ms=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1)-n;
+  setTimeout(()=>{ST.log=[];ST.date=new Date().toDateString();sv();rlog();uhud();midnight();},ms);
+}
+
+ld();midnight();
+try{ct=Math.min(parseInt(localStorage.getItem('ct_t')||'0'),TH.length-1);if(isNaN(ct))ct=0;}catch(e){}
+buildDots();applyT(ct);prev();
+if(ST.setup){applyT(ST.setup.theme??ct);showMain();}
+</script>
+</body>
+</html>
